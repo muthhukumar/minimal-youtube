@@ -32,7 +32,7 @@ export default function Channels() {
       <Form action="" method="get">
         <input name="q" type="text" defaultValue={searchParams.get("q") ?? ""} />
       </Form>
-      <div className="">
+      <div>
         {data.channels.map(channel => {
           return (
             <div key={channel.id.channelId}>
