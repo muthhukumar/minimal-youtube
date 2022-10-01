@@ -25,11 +25,19 @@ const getListOfVideos = async ({
   url.searchParams.set("type", "video")
   url.searchParams.set("videoType", "any")
 
-  const response = await fetch(url)
-  const data = await response.json()
+  try {
+    const response = await fetch(url)
+    const data = (await response.json()) as {
+      items: Array<{kind: string; etag: string; id: {kind: string; videoId: string}}>
+    }
 
-  return data as {
-    items: Array<{kind: string; etag: string; id: {kind: string; videoId: string}}>
+    if (!response.ok) {
+      return []
+    }
+
+    return data.items
+  } catch (error) {
+    return []
   }
 }
 
@@ -45,10 +53,20 @@ const getListOfChannels = async ({
   url.searchParams.set("key", YT_API_KEY)
   url.searchParams.set("type", "channel")
 
-  const response = await fetch(url)
-  const data = await response.json()
+  try {
+    const response = await fetch(url)
+    const json = (await response.json()) as {
+      items: Array<{kind: string; etag: string; id: {kind: string; channelId: string}}>
+    }
 
-  return data as {items: Array<{kind: string; etag: string; id: {kind: string; channelId: string}}>}
+    if (!response.ok) {
+      return []
+    }
+
+    return json.items
+  } catch (error) {
+    return []
+  }
 }
 
 export const API = {

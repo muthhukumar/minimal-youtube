@@ -1,5 +1,5 @@
 import {json, type LoaderArgs} from "@remix-run/node"
-import {Form, Link, useLoaderData, useSearchParams} from "@remix-run/react"
+import {Form, Link, useCatch, useLoaderData, useSearchParams} from "@remix-run/react"
 
 import {API} from "~/services"
 
@@ -12,10 +12,14 @@ export async function loader({request}: LoaderArgs) {
     return json({channels: []})
   }
 
-  const data = await API.getListOfChannels({q: query})
+  const channels = await API.getListOfChannels({q: query})
+
+  if (channels.length === 0) {
+    throw json({message: "No channels found"}, {status: 404})
+  }
 
   return json(
-    {channels: data.items},
+    {channels},
     {
       headers: {
         "Cache-Control": String(60 * 60 * 30),
@@ -41,6 +45,30 @@ export default function Channels() {
           )
         })}
       </div>
+    </div>
+  )
+}
+
+export const CatchBoundary = () => {
+  const caught = useCatch()
+  const [searchParams] = useSearchParams()
+
+  if (caught.status === 404) {
+    return (
+      <div>
+        <Form action="" method="get">
+          <input name="q" type="text" defaultValue={searchParams.get("q") ?? ""} />
+        </Form>
+        <h2>{caught.data.message}</h2>
+      </div>
+    )
+  }
+}
+
+export const ErrorBoundary = () => {
+  return (
+    <div>
+      <h1>Internal server error</h1>
     </div>
   )
 }
