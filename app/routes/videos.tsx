@@ -14,7 +14,7 @@ export async function loader({request}: LoaderArgs) {
   const videos = await API.getListOfVideos({q: query})
 
   if (videos.length === 0) {
-    throw json({message: "No videos found"})
+    throw json({message: "No videos found"}, {status: 400})
   }
 
   return json(
