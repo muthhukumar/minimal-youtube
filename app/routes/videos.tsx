@@ -14,7 +14,7 @@ export async function loader({request}: LoaderArgs) {
   const videos = await API.getListOfVideos({q: query})
 
   if (videos.length === 0) {
-    throw json({message: "No videos found"}, {status: 400})
+    throw json({message: "No videos found"}, {status: 404})
   }
 
   return json(
@@ -30,7 +30,6 @@ export async function loader({request}: LoaderArgs) {
 export default function Index() {
   const data = useLoaderData<typeof loader>()
   const [searchParams] = useSearchParams()
-  console.log("here", data)
   return (
     <div style={{fontFamily: "system-ui, sans-serif", lineHeight: "1.4"}}>
       <Form action="" method="get">
@@ -63,6 +62,8 @@ export const CatchBoundary = () => {
       </div>
     )
   }
+
+  return <h2>Something went wrong</h2>
 }
 
 export const ErrorBoundary = () => {

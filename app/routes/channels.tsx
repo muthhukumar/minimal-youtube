@@ -63,6 +63,7 @@ export const CatchBoundary = () => {
       </div>
     )
   }
+  return <h2>Something went wrong</h2>
 }
 
 export const ErrorBoundary = () => {

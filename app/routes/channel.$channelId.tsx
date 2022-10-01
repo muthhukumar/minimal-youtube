@@ -8,14 +8,10 @@ export async function loader({request, params}: LoaderArgs) {
 
   const query = url.searchParams.get("q") ?? ""
 
-  if (!query) {
-    return json({videos: []})
-  }
-
   const videos = await API.getListOfVideos({q: query, channelId: params.channelId})
 
   if (videos.length === 0) {
-    throw json({message: "No videos found"}, {status: 400})
+    throw json({message: "No videos found"}, {status: 404})
   }
 
   return json(
@@ -63,6 +59,8 @@ export const CatchBoundary = () => {
       </div>
     )
   }
+
+  return <h2>Something went wrong</h2>
 }
 
 export const ErrorBoundary = () => {
