@@ -18,7 +18,7 @@ export async function loader({request, params}: LoaderArgs) {
     {videos},
     {
       headers: {
-        "Cache-Control": String(60 * 60 * 30),
+        "Cache-Control": `max-age=${String(60 * 60 * 30)}`,
       },
     },
   )
